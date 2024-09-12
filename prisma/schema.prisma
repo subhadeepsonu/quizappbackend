@@ -25,6 +25,7 @@ model category {
   id        String     @id @default(uuid())
   name      String
   questions question[]
+  quiz      quiz[]
 }
 
 model question {
@@ -46,7 +47,11 @@ enum Difficulty {
 
 model quiz {
   id          String        @id @default(uuid())
-  live        Boolean
+  name        String
+  image       String
+  categoryid  String
+  live        Boolean       @default(false)
+  category    category      @relation(fields: [categoryid], references: [id])
   difficulty  Difficulty
   question    question[]
   Submissions Submissions[]

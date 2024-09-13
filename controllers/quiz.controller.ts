@@ -253,3 +253,16 @@ export async function removeQuestionfromQuiz(req: Request, res: Response) {
         })
     }
 }
+export async function getPopularQuiz(req: Request, res: Response) {
+    try {
+        const response = await prisma.quiz.findMany({
+            take:4
+        })
+        return response
+    } catch (error) {
+        return res.status(500).json({
+            success:false,
+            message:"Internal server error"
+        })
+    }
+}

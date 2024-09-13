@@ -8,9 +8,10 @@ import cors  from "cors"
 const app = express()
 const port = 3000
 app.use(express.json())
-cors({
-    origin: '*'
-})
+app.use(cors({
+    origin:"http://localhost:5173",
+    credentials:true
+}))
 app.use("/user",userRouter)
 app.use("/quiz",quizRouter)
 app.use("/submissions",submissionRouter)

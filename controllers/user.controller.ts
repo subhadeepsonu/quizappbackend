@@ -3,6 +3,31 @@ import prisma from "../db";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import { loginSchema, registerSchema } from "../schema/user.schema";
+export async function me(req:Request,res:Response){
+    try {
+        const data = req.body
+        const response = await prisma.user.findUnique({
+            where:{
+                id:data.id
+            }
+        })
+        if(!response){
+            return res.json({ 
+                success:false,
+                message:"User does not exist"
+            })
+        }
+        return res.json({
+            success:true,
+            message:response
+        })
+    } catch (error) {
+        return res.status(500).json({
+            success:false,
+            message:"Internal server error"
+        })
+    }
+}
 export async function login(req: Request, res: Response) {
     try {
         const data = req.body;
@@ -13,12 +38,13 @@ export async function login(req: Request, res: Response) {
                 message:checkschema.error.message
             })
         }
+        
         const checkuser = await prisma.user.findUnique({
             where:{
                 email:checkschema.data.email
             }
         })
-        console.log(data)
+        
         if(!checkuser){
             return res.status(400).json({
                 success:false,
@@ -27,7 +53,7 @@ export async function login(req: Request, res: Response) {
         }
         const verify = bcrypt.compareSync(data.password,checkuser.password);
         if(!verify){
-            return res.status(400).json({
+            return res.json({
                 success:false,
                 message:"Invalid password"
             })
@@ -35,8 +61,9 @@ export async function login(req: Request, res: Response) {
         const token = jwt.sign({id:checkuser.id,role:checkuser.role},process.env.secret!);
         res.cookie("token",token,{
             httpOnly:true,
-            secure:true
+            // secure:true
         })
+        console.log(token)
         return res.status(200).json({
             success:true,
             token:token
@@ -81,7 +108,7 @@ export async function register(req: Request, res: Response) {
         const token = jwt.sign({id:user.id,role:user.role},process.env.secret!);
         res.cookie("token",token,{
             httpOnly:true,
-            secure:true
+            // secure:true
         })
         return res.status(200).json({
             success:true,

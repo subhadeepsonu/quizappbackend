@@ -116,6 +116,11 @@ export async function getQuestionbycategory(req: Request, res: Response) {
         const response = await prisma.question.findMany({
             where:{
                 categoryid:category
+            },
+            include:{
+                category:{
+                    
+                }
             }
         })
         return res.status(200).json({
@@ -160,6 +165,24 @@ export async function checkanswer(req: Request, res: Response) {
         return res.status(200).json({
             success:false,
             message:"Incorrect answer"
+        })
+    } catch (error) {
+        return res.status(500).json({
+            success:false,
+            message:"Internal server error"
+        })
+    }
+}
+export async function getAllQuestions(req: Request, res: Response) {
+    try {
+        const response = await prisma.question.findMany({
+            include:{
+                category:true
+            }
+        })
+        return res.status(200).json({
+            success:true,
+            data:response
         })
     } catch (error) {
         return res.status(500).json({

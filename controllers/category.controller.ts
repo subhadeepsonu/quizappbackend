@@ -30,8 +30,16 @@ export async function createcategory(req: Request, res: Response) {
 }   
 export async function getcategory(req: Request, res: Response) {
     try {
-        const response = await prisma.category.findMany();
-        return res.status(200).json({
+        const response = await prisma.category.findMany({
+            include:{
+                _count:{
+                    select:{
+                        questions:true
+                    }
+                }
+            }
+        });
+        return res.json({
             success:true,
             data:response
         })

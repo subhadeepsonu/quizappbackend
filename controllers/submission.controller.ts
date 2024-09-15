@@ -32,9 +32,9 @@ export async function createSubmission(req: Request, res: Response) {
 }
 export async function getSubmission(req: Request, res: Response) {
     try {
-        const data = req.body;
+        const id = req.params.id;
         const response = await prisma.submissions.findMany({where:{
-            userid:data.userid
+            userid:id
         }});
         return res.status(200).json({
             success:true,

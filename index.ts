@@ -4,9 +4,11 @@ import { quizRouter } from "./routes/quiz.route"
 import { submissionRouter } from "./routes/submission.route"
 import { questionRouter } from "./routes/question.route"
 import { categoryRouter } from "./routes/category.route"
+import cookieParser from "cookie-parser"
 import cors  from "cors"
 const app = express()
 const port = 3000
+app.use(cookieParser())
 app.use(express.json())
 app.use(cors({
     origin:"http://localhost:5173",

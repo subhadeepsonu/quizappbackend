@@ -162,3 +162,32 @@ export async function logout(req: Request, res: Response) {
         });
     }
 }
+export async function getuser(req: Request, res: Response) {
+    try {
+        const data = req.body;  
+        if(!data.email){
+            const response = await prisma.user.findMany();
+            return res.json({
+                success: true,
+                data: response
+            });
+        }
+        const response = await prisma.user.findMany({
+            where:{
+                email:{
+                    contains:data.email,
+                    mode:"insensitive"
+                }
+            }
+        });
+        return res.json({
+            success: true,
+            data: response
+        });
+    } catch (error) {
+        return res.json({
+            success: false,
+            message: "Internal server error"
+        });
+    }
+}

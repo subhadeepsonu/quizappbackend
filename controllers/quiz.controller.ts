@@ -33,7 +33,46 @@ export async function createQuiz(req: Request, res: Response) {
 }
 export async function getAllQuiz(req: Request, res: Response) {
     try {
-        const response = await prisma.quiz.findMany({})
+        const data = req.body;
+        if(!data.categoryid && !data.name){
+            const response = await prisma.quiz.findMany({
+                include:{
+                    category:true,
+                    _count:{
+                        select:{
+                            question:true
+                        }
+                    }
+                }
+            })
+            return res.json({
+                success:true,
+                data:response
+            })
+        }
+        let filter:any ={}
+        if(data.categoryid){
+            filter.categoryid = data.categoryid
+        }
+        if(data.name){
+            filter.name = {
+                contains:data.name,
+                mode:"insensitive"
+            }
+        }
+        const response = await prisma.quiz.findMany({
+            include:{
+                category:true,
+                _count:{
+                    select:{
+                        question:true
+                    }
+                }
+
+            },
+            where:filter
+
+        })
         return res.json({
             success:true,
             data:response
@@ -127,7 +166,11 @@ export async function getQuizbycategory(req: Request, res: Response) {
         const categoryid = req.params.categoryid;
         const response = await prisma.quiz.findMany({
             where:{
-                categoryid:categoryid
+                categoryid:categoryid,
+
+            },
+            include:{
+                category:true
             }
         })
         return res.json({

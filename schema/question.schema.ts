@@ -2,6 +2,7 @@ import z from 'zod';
 export const createquestionSchema = z.object({
     question:z.string().min(1),
     answer:z.string().min(1),
+    discription:z.string().min(1),
     categoryid:z.string().min(1),
     image:z.string().min(1),
     difficulty:z.enum(["easy","medium","hard"])
@@ -9,6 +10,7 @@ export const createquestionSchema = z.object({
 export const editQuestionSchema = z.object({
     question:z.string().min(1),
     answer:z.string().min(1),
+    discription:z.string().min(1),
     categoryid:z.string().min(1),
     image:z.string().min(1),
     difficulty:z.enum(["easy","medium","hard"])

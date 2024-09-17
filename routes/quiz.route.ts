@@ -4,7 +4,7 @@ import { adminmiddleware } from "../middlewares/admin.middleware"
 import { usermiddleware } from "../middlewares/user.middleware"
 export const quizRouter = express.Router()
 quizRouter.post('/create',adminmiddleware,createQuiz)
-quizRouter.get('/',usermiddleware,getAllQuiz)
+quizRouter.post('/filter',usermiddleware,getAllQuiz)
 quizRouter.get('/qid/:quizid',usermiddleware,getQuizbyid)
 quizRouter.get('/catid/:category',usermiddleware,getQuizbycategory)
 quizRouter.put('/edit/:quizid',adminmiddleware,editQuiz)

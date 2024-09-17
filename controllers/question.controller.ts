@@ -17,7 +17,8 @@ export async function createQuestion(req: Request, res: Response) {
                 categoryid:checkschema.data.categoryid,
                 difficulty:checkschema.data.difficulty,
                 image:checkschema.data.image,
-                question:checkschema.data.question
+                question:checkschema.data.question,
+                discription:checkschema.data.discription
 
             }
         })
@@ -77,7 +78,8 @@ export async function editQuestion(req: Request, res: Response) {
                 categoryid:checkschema.data.categoryid,
                 difficulty:checkschema.data.difficulty,
                 image:checkschema.data.image,
-                question:checkschema.data.question
+                question:checkschema.data.question,
+                discription:checkschema.data.discription
             }
         })
         return res.status(200).json({
@@ -175,10 +177,33 @@ export async function checkanswer(req: Request, res: Response) {
 }
 export async function getAllQuestions(req: Request, res: Response) {
     try {
+        const data = req.body;
+        if(!data.categoryid && !data.question){
+            const response = await prisma.question.findMany({
+                include:{
+                    category:true
+                }
+            })
+            return res.status(200).json({
+                success:true,
+                data:response
+            })
+        }
+        let filter:any = {}
+        if(data.categoryid){
+            filter.categoryid=data.categoryid
+        }
+        if(data.question){
+            filter.question={
+                contains:data.question,
+                mode:"insensitive"
+            }
+        }
         const response = await prisma.question.findMany({
             include:{
                 category:true
-            }
+            },
+            where:filter
         })
         return res.status(200).json({
             success:true,

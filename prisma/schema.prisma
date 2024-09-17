@@ -22,21 +22,23 @@ enum Role {
 }
 
 model category {
-  id        String     @id @default(uuid())
+  id        String      @id @default(uuid())
   name      String
   questions question[]
   quiz      quiz[]
+  FlashCard FlashCard[]
 }
 
 model question {
-  id         String     @id @default(uuid())
-  question   String
-  answer     String
-  image      String
-  difficulty Difficulty
-  categoryid String
-  category   category   @relation(fields: [categoryid], references: [id])
-  quiz       quiz[]
+  id          String     @id @default(uuid())
+  question    String
+  answer      String
+  discription String     @default("")
+  image       String
+  difficulty  Difficulty
+  categoryid  String
+  category    category   @relation(fields: [categoryid], references: [id])
+  quiz        quiz[]
 }
 
 enum Difficulty {
@@ -66,4 +68,13 @@ model Submissions {
   userid   String
   quiz     quiz    @relation(fields: [quizid], references: [id])
   user     user    @relation(fields: [userid], references: [id])
+}
+
+model FlashCard {
+  id          String   @id @default(uuid())
+  question    String
+  answer      String
+  discription String
+  categoryid  String
+  category    category @relation(fields: [categoryid], references: [id])
 }
